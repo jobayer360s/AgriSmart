@@ -1,0 +1,55 @@
+     body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            padding: 40px;
+        }
+
+        .container {
+            width: 400px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 3px;
+        }
+
+        #success {
+            text-align: center;
+            color: green;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        body {
+    background-image: url('1.jpeg'); 
+    background-size: cover;      
+    background-repeat: no-repeat; 
+    background-position: center; 
+    font-family: Arial, sans-serif;
+}
