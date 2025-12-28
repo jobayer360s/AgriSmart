@@ -1,5 +1,5 @@
 <?php
-// views/auth.php - Combined Login & Signup
+// views/auth.php Combined Login & Signup
 ?>
 <!DOCTYPE html>
 <html lang="en">
