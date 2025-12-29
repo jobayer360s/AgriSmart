@@ -12,16 +12,15 @@
     <link rel="stylesheet" href="../assets/css/tips.css">
 </head>
 <body>
-    <!-- Header -->
+  
     <?php include '../assets/layouts/header.php'; ?>
 
-    <!-- Tips Hero -->
+ 
     <section class="tips-hero">
         <h1>🌾 Knowledge Hub</h1>
         <p>Educational resources to help you improve your farming practices</p>
     </section>
 
-    <!-- Featured Article -->
     <section class="featured-section">
         <h2 class="featured-title">📌 Featured Article</h2>
         <div class="featured-container">
@@ -49,7 +48,7 @@
         </div>
     </section>
 
-    <!-- Filter Section -->
+  
     <section class="resources-section">
         <div class="filter-section">
             <div class="filter-title">Filter Resources</div>
@@ -62,14 +61,14 @@
             </div>
         </div>
 
-        <!-- All Resources -->
+       
         <h2 class="section-title">💡 All Resources</h2>
         <div class="view-all">
             <a href="#">View All →</a>
         </div>
 
         <div class="resources-grid">
-            <!-- Resource 1 -->
+            
             <div class="resource-card">
                 <div class="resource-image">
                     <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad576?w=300&h=180&fit=crop" alt="Corn farming">
