@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 04, 2026 at 09:24 AM
+-- Generation Time: Jan 05, 2026 at 11:36 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,47 +38,15 @@ CREATE TABLE `answers` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `calendar_tasks`
+-- Table structure for table `cart`
 --
 
-CREATE TABLE `calendar_tasks` (
-  `id` int(11) NOT NULL,
-  `farmer_id` int(11) NOT NULL,
-  `title` varchar(200) NOT NULL,
-  `description` text DEFAULT NULL,
-  `task_date` date NOT NULL,
-  `task_type` varchar(50) DEFAULT NULL,
-  `completed` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `cart_items`
---
-
-CREATE TABLE `cart_items` (
+CREATE TABLE `cart` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `input_product_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL,
+  `product_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
   `added_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `chat_messages`
---
-
-CREATE TABLE `chat_messages` (
-  `id` int(11) NOT NULL,
-  `sender_id` int(11) NOT NULL,
-  `receiver_id` int(11) NOT NULL,
-  `message` text NOT NULL,
-  `is_read` tinyint(1) DEFAULT 0,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -100,52 +68,10 @@ CREATE TABLE `faqs` (
 --
 
 INSERT INTO `faqs` (`id`, `question`, `answer`, `category`, `created_at`) VALUES
-(1, 'How do I create an account?', 'Click Sign Up, fill details, and choose your role.', 'Account', '2026-01-04 08:23:02'),
-(2, 'How to contact experts?', 'Go to Q&A or Chat section to contact experts.', 'Features', '2026-01-04 08:23:02');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `input_orders`
---
-
-CREATE TABLE `input_orders` (
-  `id` int(11) NOT NULL,
-  `farmer_id` int(11) NOT NULL,
-  `input_product_id` int(11) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `total_price` decimal(10,2) NOT NULL,
-  `status` enum('pending','confirmed','delivered') DEFAULT 'pending',
-  `delivery_address` text DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `input_products`
---
-
-CREATE TABLE `input_products` (
-  `id` int(11) NOT NULL,
-  `supplier_id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `description` text DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `stock` int(11) NOT NULL,
-  `category` varchar(50) DEFAULT NULL,
-  `status` enum('active','out_of_stock') DEFAULT 'active',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `input_products`
---
-
-INSERT INTO `input_products` (`id`, `supplier_id`, `name`, `description`, `price`, `stock`, `category`, `status`, `created_at`) VALUES
-(1, 1, 'Organic Fertilizer 5kg', 'High quality organic fertilizer', 450.00, 200, 'Fertilizer', 'active', '2026-01-04 08:23:02'),
-(2, 1, 'Rice Seeds Premium', 'Premium quality rice seeds', 850.00, 150, 'Seeds', 'active', '2026-01-04 08:23:02'),
-(3, 2, 'Pesticide Spray', 'Organic pesticide', 320.00, 100, 'Pesticide', 'active', '2026-01-04 08:23:02');
+(1, 'How do I register as a farmer?', 'Click on Sign Up button, fill in your details, and select \"Farmer\" as your role. You will receive a confirmation email.', 'Account', '2026-01-05 10:17:35'),
+(2, 'How can I contact an expert?', 'Go to the Q&A section and post your question, or use the chat feature to directly message available experts.', 'General', '2026-01-05 10:17:35'),
+(3, 'What payment methods are accepted?', 'We currently accept Cash on Delivery for all orders. Online payment options will be available soon.', 'Payment', '2026-01-05 10:17:35'),
+(4, 'How long does delivery take?', 'Delivery typically takes 2-5 business days depending on your location.', 'Delivery', '2026-01-05 10:17:35');
 
 -- --------------------------------------------------------
 
@@ -156,11 +82,12 @@ INSERT INTO `input_products` (`id`, `supplier_id`, `name`, `description`, `price
 CREATE TABLE `market_prices` (
   `id` int(11) NOT NULL,
   `crop_name` varchar(100) NOT NULL,
-  `region` varchar(100) NOT NULL,
   `price` decimal(10,2) NOT NULL,
   `unit` varchar(20) DEFAULT 'kg',
-  `date` date NOT NULL,
+  `region` varchar(100) DEFAULT NULL,
   `source` varchar(100) DEFAULT NULL,
+  `price_date` date NOT NULL,
+  `created_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -168,9 +95,29 @@ CREATE TABLE `market_prices` (
 -- Dumping data for table `market_prices`
 --
 
-INSERT INTO `market_prices` (`id`, `crop_name`, `region`, `price`, `unit`, `date`, `source`, `created_at`) VALUES
-(1, 'Rice', 'Dhaka', 52.00, 'kg', '2026-01-04', 'TCB', '2026-01-04 08:23:02'),
-(2, 'Tomato', 'Dhaka', 45.00, 'kg', '2026-01-04', 'TCB', '2026-01-04 08:23:02');
+INSERT INTO `market_prices` (`id`, `crop_name`, `price`, `unit`, `region`, `source`, `price_date`, `created_by`, `created_at`) VALUES
+(1, 'Rice (Coarse)', 52.00, 'kg', 'Dhaka', 'DAM', '2026-01-05', NULL, '2026-01-05 10:17:35'),
+(2, 'Rice (Fine)', 65.00, 'kg', 'Dhaka', 'DAM', '2026-01-05', NULL, '2026-01-05 10:17:35'),
+(3, 'Potato', 25.00, 'kg', 'Dhaka', 'DAM', '2026-01-05', NULL, '2026-01-05 10:17:35'),
+(4, 'Onion', 45.00, 'kg', 'Dhaka', 'DAM', '2026-01-05', NULL, '2026-01-05 10:17:35'),
+(5, 'Tomato', 60.00, 'kg', 'Dhaka', 'DAM', '2026-01-05', NULL, '2026-01-05 10:17:35'),
+(6, 'Cauliflower', 35.00, 'kg', 'Dhaka', 'DAM', '2026-01-05', NULL, '2026-01-05 10:17:35'),
+(7, 'Carrot', 40.00, 'kg', 'Dhaka', 'DAM', '2026-01-05', NULL, '2026-01-05 10:17:35');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -181,13 +128,23 @@ INSERT INTO `market_prices` (`id`, `crop_name`, `region`, `price`, `unit`, `date
 CREATE TABLE `notifications` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
+  `type` varchar(50) DEFAULT NULL,
   `title` varchar(200) NOT NULL,
   `message` text NOT NULL,
-  `type` varchar(50) DEFAULT NULL,
-  `is_read` tinyint(1) DEFAULT 0,
   `link` varchar(255) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user_id`, `type`, `title`, `message`, `link`, `is_read`, `created_at`) VALUES
+(1, 1, 'order', 'New Order Received', 'Farmer farmer1 placed an order #ORD-2026-0003', 'manage_orders.php?id=3', 0, '2026-01-05 10:17:35'),
+(2, 1, 'ticket', 'New Support Ticket', 'User farmer1 submitted a support ticket', 'support_tickets.php?id=1', 0, '2026-01-05 10:17:35'),
+(3, 5, 'order', 'Order Confirmed', 'Your order #ORD-2026-0003 has been confirmed', 'my_orders.php', 0, '2026-01-05 10:17:35'),
+(4, 3, 'message', 'New Message', 'You have a new message from farmer1', 'chat.php?user=5', 0, '2026-01-05 10:17:35');
 
 -- --------------------------------------------------------
 
@@ -197,41 +154,94 @@ CREATE TABLE `notifications` (
 
 CREATE TABLE `orders` (
   `id` int(11) NOT NULL,
+  `order_number` varchar(50) NOT NULL,
+  `farmer_id` int(11) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `delivery_address` text NOT NULL,
+  `status` enum('pending','processing','shipped','delivered','cancelled') DEFAULT 'pending',
+  `payment_method` enum('cash_on_delivery','online') DEFAULT 'cash_on_delivery',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `order_number`, `farmer_id`, `total_amount`, `delivery_address`, `status`, `payment_method`, `created_at`, `updated_at`) VALUES
+(1, 'ORD-2026-0001', 5, 2400.00, 'Village: Nandail, District: Bogra', 'delivered', 'cash_on_delivery', '2026-01-05 10:17:35', '2026-01-05 10:17:35'),
+(2, 'ORD-2026-0002', 6, 1950.00, 'Village: Puthia, District: Rajshahi', 'processing', 'cash_on_delivery', '2026-01-05 10:17:35', '2026-01-05 10:17:35'),
+(3, 'ORD-2026-0003', 5, 850.00, 'Village: Nandail, District: Bogra', 'pending', 'cash_on_delivery', '2026-01-05 10:17:35', '2026-01-05 10:17:35');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
-  `buyer_id` int(11) NOT NULL,
+  `product_name` varchar(100) NOT NULL,
   `quantity` int(11) NOT NULL,
-  `total_price` decimal(10,2) NOT NULL,
-  `status` enum('pending','accepted','rejected','delivered') DEFAULT 'pending',
-  `delivery_address` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `product_name`, `quantity`, `price`) VALUES
+(1, 1, 1, 'Urea Fertilizer 50kg', 2, 1200.00),
+(2, 2, 4, 'Hybrid Rice Seeds (BR28)', 3, 450.00),
+(3, 2, 6, 'Insecticide Spray 1L', 1, 350.00),
+(4, 3, 7, 'Hand Sprayer', 1, 850.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_resets`
+--
+
+CREATE TABLE `password_resets` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `token` varchar(100) NOT NULL,
+  `expires_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `products`
+-- Table structure for table `profiles`
 --
 
-CREATE TABLE `products` (
+CREATE TABLE `profiles` (
   `id` int(11) NOT NULL,
-  `farmer_id` int(11) NOT NULL,
-  `title` varchar(100) NOT NULL,
-  `description` text DEFAULT NULL,
-  `price` decimal(10,2) NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `unit` varchar(20) DEFAULT 'kg',
-  `category` varchar(50) DEFAULT NULL,
-  `status` enum('active','inactive') DEFAULT 'active',
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `user_id` int(11) NOT NULL,
+  `full_name` varchar(100) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `bio` text DEFAULT NULL,
+  `expertise` varchar(100) DEFAULT NULL,
+  `farm_size` decimal(10,2) DEFAULT NULL,
+  `crops` varchar(255) DEFAULT NULL,
+  `profile_picture` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `products`
+-- Dumping data for table `profiles`
 --
 
-INSERT INTO `products` (`id`, `farmer_id`, `title`, `description`, `price`, `quantity`, `unit`, `category`, `status`, `created_at`) VALUES
-(1, 4, 'Fresh Tomatoes', 'Organic tomatoes', 50.00, 100, 'kg', 'Vegetables', 'active', '2026-01-04 08:23:02'),
-(2, 4, 'Premium Rice', 'High quality rice', 55.00, 500, 'kg', 'Grains', 'active', '2026-01-04 08:23:02');
+INSERT INTO `profiles` (`id`, `user_id`, `full_name`, `phone`, `address`, `bio`, `expertise`, `farm_size`, `crops`, `profile_picture`) VALUES
+(1, 1, 'Admin User', '01711111111', 'Dhaka, Bangladesh', NULL, NULL, NULL, NULL, NULL),
+(2, 2, 'Manager User', '01722222222', 'Dhaka, Bangladesh', NULL, NULL, NULL, NULL, NULL),
+(3, 3, 'Dr. Karim Ahmed', '01733333333', 'Chittagong, Bangladesh', NULL, 'Rice, Pest Control', NULL, NULL, NULL),
+(4, 4, 'Prof. Fatima Rahman', '01744444444', 'Sylhet, Bangladesh', NULL, 'Vegetables, Organic Farming', NULL, NULL, NULL),
+(5, 5, 'Rahim Mia', '01755555555', 'Bogra, Bangladesh', NULL, NULL, NULL, NULL, NULL),
+(6, 6, 'Korim Uddin', '01766666666', 'Rajshahi, Bangladesh', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -248,29 +258,69 @@ CREATE TABLE `questions` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `questions`
+--
+
+INSERT INTO `questions` (`id`, `farmer_id`, `title`, `content`, `status`, `created_at`) VALUES
+(1, 5, 'When should I apply fertilizer to rice?', 'I planted rice 2 weeks ago. When is the best time to apply urea fertilizer?', 'open', '2026-01-05 10:17:35'),
+(2, 6, 'My tomato plants have yellow leaves', 'The leaves of my tomato plants are turning yellow. What could be the problem and how do I fix it?', 'open', '2026-01-05 10:17:35');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `suppliers`
+-- Table structure for table `revenue`
 --
 
-CREATE TABLE `suppliers` (
+CREATE TABLE `revenue` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `revenue` decimal(10,2) NOT NULL,
+  `cost` decimal(10,2) NOT NULL,
+  `profit` decimal(10,2) NOT NULL,
+  `recorded_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `revenue`
+--
+
+INSERT INTO `revenue` (`id`, `order_id`, `revenue`, `cost`, `profit`, `recorded_at`) VALUES
+(1, 1, 2400.00, 1800.00, 600.00, '2026-01-05 10:17:35'),
+(2, 2, 1950.00, 1400.00, 550.00, '2026-01-05 10:17:35');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shop_products`
+--
+
+CREATE TABLE `shop_products` (
   `id` int(11) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `email` varchar(100) DEFAULT NULL,
-  `phone` varchar(20) DEFAULT NULL,
-  `address` text DEFAULT NULL,
-  `status` enum('active','inactive') DEFAULT 'active',
+  `description` text DEFAULT NULL,
+  `category` enum('Fertilizer','Seeds','Pesticides','Tools','Equipment') NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `stock` int(11) NOT NULL DEFAULT 0,
+  `supplier_name` varchar(100) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `suppliers`
+-- Dumping data for table `shop_products`
 --
 
-INSERT INTO `suppliers` (`id`, `name`, `email`, `phone`, `address`, `status`, `created_at`) VALUES
-(1, 'AgroTech Ltd', 'info@agrotech.com', '01711111111', NULL, 'active', '2026-01-04 08:23:02'),
-(2, 'FarmSupply Co', 'contact@farmsupply.com', '01722222222', NULL, 'active', '2026-01-04 08:23:02');
+INSERT INTO `shop_products` (`id`, `name`, `description`, `category`, `price`, `stock`, `supplier_name`, `image`, `created_by`, `created_at`) VALUES
+(1, 'Urea Fertilizer 50kg', 'High quality nitrogen fertilizer for crops', 'Fertilizer', 1200.00, 500, 'ACI Fertilizer Ltd', NULL, 1, '2026-01-05 10:17:35'),
+(2, 'TSP Fertilizer 50kg', 'Triple Super Phosphate for better root growth', 'Fertilizer', 1500.00, 300, 'ACI Fertilizer Ltd', NULL, 1, '2026-01-05 10:17:35'),
+(3, 'Potash Fertilizer 50kg', 'Potassium fertilizer for fruit development', 'Fertilizer', 1800.00, 250, 'ACI Fertilizer Ltd', NULL, 1, '2026-01-05 10:17:35'),
+(4, 'Hybrid Rice Seeds (BR28)', 'High yield rice variety', 'Seeds', 450.00, 1000, 'BADC Seeds', NULL, 1, '2026-01-05 10:17:35'),
+(5, 'Vegetable Seeds Mix', 'Mixed vegetable seeds package', 'Seeds', 250.00, 800, 'Lal Teer Seeds', NULL, 1, '2026-01-05 10:17:35'),
+(6, 'Insecticide Spray 1L', 'Effective pest control solution', 'Pesticides', 350.00, 400, 'Syngenta Bangladesh', NULL, 1, '2026-01-05 10:17:35'),
+(7, 'Hand Sprayer', 'Manual sprayer for pesticides', 'Tools', 850.00, 150, 'Local Supplier', NULL, 1, '2026-01-05 10:17:35'),
+(8, 'Garden Hoe', 'Durable farming hoe', 'Tools', 450.00, 200, 'Local Supplier', NULL, 1, '2026-01-05 10:17:35');
 
 -- --------------------------------------------------------
 
@@ -283,12 +333,47 @@ CREATE TABLE `support_tickets` (
   `user_id` int(11) NOT NULL,
   `subject` varchar(200) NOT NULL,
   `message` text NOT NULL,
-  `priority` enum('low','medium','high') DEFAULT 'medium',
   `category` varchar(50) DEFAULT NULL,
-  `status` enum('open','closed') DEFAULT 'open',
-  `response` text DEFAULT NULL,
+  `priority` enum('low','medium','high') DEFAULT 'medium',
+  `status` enum('open','in_progress','resolved','closed') DEFAULT 'open',
+  `admin_response` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `support_tickets`
+--
+
+INSERT INTO `support_tickets` (`id`, `user_id`, `subject`, `message`, `category`, `priority`, `status`, `admin_response`, `created_at`, `updated_at`) VALUES
+(1, 5, 'Payment issue', 'I paid for my order but status shows pending', 'Payment', 'high', 'open', NULL, '2026-01-05 10:17:35', '2026-01-05 10:17:35'),
+(2, 3, 'Cannot edit my tips', 'Getting error when trying to edit my posted tips', 'Technical', 'medium', 'open', NULL, '2026-01-05 10:17:35', '2026-01-05 10:17:35');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tasks`
+--
+
+CREATE TABLE `tasks` (
+  `id` int(11) NOT NULL,
+  `farmer_id` int(11) NOT NULL,
+  `title` varchar(200) NOT NULL,
+  `description` text DEFAULT NULL,
+  `task_date` date NOT NULL,
+  `task_type` varchar(50) DEFAULT NULL,
+  `completed` tinyint(1) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `tasks`
+--
+
+INSERT INTO `tasks` (`id`, `farmer_id`, `title`, `description`, `task_date`, `task_type`, `completed`, `created_at`) VALUES
+(1, 5, 'Apply fertilizer to rice field', 'Apply urea fertilizer to the main field', '2026-01-07', 'Fertilizing', 0, '2026-01-05 10:17:35'),
+(2, 5, 'Check irrigation system', 'Ensure water pump is working properly', '2026-01-10', 'Watering', 0, '2026-01-05 10:17:35'),
+(3, 6, 'Harvest tomatoes', 'Harvest ripe tomatoes from greenhouse', '2026-01-06', 'Harvesting', 0, '2026-01-05 10:17:35');
 
 -- --------------------------------------------------------
 
@@ -310,8 +395,10 @@ CREATE TABLE `tips` (
 --
 
 INSERT INTO `tips` (`id`, `expert_id`, `title`, `content`, `category`, `created_at`) VALUES
-(1, 3, 'Rice Planting Guide', 'Best time to plant rice is during monsoon season. Ensure proper water management.', 'Rice', '2026-01-04 08:23:02'),
-(2, 3, 'Organic Farming', 'Use natural compost for better crop health.', 'General', '2026-01-04 08:23:02');
+(1, 3, 'Best Time to Plant Rice', 'The best time to plant rice in Bangladesh is during the monsoon season (June-July). Ensure proper land preparation and use quality seeds for better yield.', 'Rice', '2026-01-05 10:17:35'),
+(2, 3, 'Pest Control for Rice', 'Monitor your rice fields regularly for pests. Use integrated pest management techniques and only apply pesticides when necessary.', 'Pest Control', '2026-01-05 10:17:35'),
+(3, 4, 'Organic Vegetable Farming', 'Use compost and organic fertilizers for healthier vegetables. Crop rotation helps prevent soil depletion and reduces pest problems.', 'Vegetables', '2026-01-05 10:17:35'),
+(4, 4, 'Water Management Tips', 'Proper irrigation is crucial. Water your crops early morning or late evening to minimize evaporation. Install drip irrigation for efficiency.', 'General', '2026-01-05 10:17:35');
 
 -- --------------------------------------------------------
 
@@ -324,8 +411,7 @@ CREATE TABLE `users` (
   `username` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `role` enum('admin','management','expert','farmer') NOT NULL DEFAULT 'farmer',
-  `phone` varchar(20) DEFAULT NULL,
+  `role` enum('admin','management','expert','farmer') NOT NULL,
   `status` enum('active','suspended') DEFAULT 'active',
   `verified` tinyint(1) DEFAULT 0,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
@@ -335,66 +421,44 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `phone`, `status`, `verified`, `created_at`) VALUES
-(1, 'admin', 'admin@agrismart.com', '123456', 'admin', NULL, 'active', 1, '2026-01-04 08:23:00'),
-(2, 'manager1', 'manager@agrismart.com', '123456', 'management', NULL, 'active', 1, '2026-01-04 08:23:00'),
-(3, 'expert1', 'expert1@agrismart.com', '123456', 'expert', NULL, 'active', 1, '2026-01-04 08:23:00'),
-(4, 'farmer1', 'farmer1@agrismart.com', '123456', 'farmer', NULL, 'active', 1, '2026-01-04 08:23:00'),
-(5, 'farmer2', 'farmer2@agrismart.com', '123456', 'farmer', NULL, 'active', 1, '2026-01-04 08:23:00');
+INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `status`, `verified`, `created_at`) VALUES
+(1, 'admin', 'admin@agrismart.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'active', 1, '2026-01-05 10:17:35'),
+(2, 'manager1', 'manager1@agrismart.com', '123456', 'management', 'active', 1, '2026-01-05 10:17:35'),
+(3, 'expert1', 'expert1@agrismart.com', '123456', 'expert', 'active', 1, '2026-01-05 10:17:35'),
+(4, 'expert2', 'expert2@agrismart.com', '123456', 'expert', 'active', 1, '2026-01-05 10:17:35'),
+(5, 'farmer1', 'farmer1@agrismart.com', '123456', 'farmer', 'active', 1, '2026-01-05 10:17:35'),
+(6, 'farmer2', 'farmer2@agrismart.com', '123456', 'farmer', 'active', 1, '2026-01-05 10:17:35');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `user_profiles`
+-- Table structure for table `weather_forecast`
 --
 
-CREATE TABLE `user_profiles` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `full_name` varchar(100) DEFAULT NULL,
-  `address` text DEFAULT NULL,
-  `bio` text DEFAULT NULL,
-  `expertise` varchar(200) DEFAULT NULL,
-  `farm_size` decimal(10,2) DEFAULT NULL,
-  `crops` varchar(255) DEFAULT NULL,
-  `profile_image` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `user_profiles`
---
-
-INSERT INTO `user_profiles` (`id`, `user_id`, `full_name`, `address`, `bio`, `expertise`, `farm_size`, `crops`, `profile_image`) VALUES
-(1, 1, 'System Admin', NULL, 'Platform Administrator', NULL, NULL, NULL, NULL),
-(2, 2, 'John Manager', NULL, 'Management Staff', NULL, NULL, NULL, NULL),
-(3, 3, 'Dr. Rahman', NULL, 'Expert in Rice and Vegetables', NULL, NULL, NULL, NULL),
-(4, 4, 'Karim Mia', NULL, 'Organic Farmer', NULL, NULL, NULL, NULL),
-(5, 5, 'Rahim Khan', NULL, 'Rice Farmer', NULL, NULL, NULL, NULL);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `weather_data`
---
-
-CREATE TABLE `weather_data` (
+CREATE TABLE `weather_forecast` (
   `id` int(11) NOT NULL,
   `location` varchar(100) NOT NULL,
-  `date` date NOT NULL,
+  `forecast_date` date NOT NULL,
   `temperature` decimal(5,2) DEFAULT NULL,
   `humidity` int(11) DEFAULT NULL,
   `rainfall` decimal(5,2) DEFAULT NULL,
   `description` varchar(200) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `weather_data`
+-- Dumping data for table `weather_forecast`
 --
 
-INSERT INTO `weather_data` (`id`, `location`, `date`, `temperature`, `humidity`, `rainfall`, `description`, `created_at`) VALUES
-(1, 'Dhaka', '2026-01-04', 28.50, 75, 0.00, 'Partly Cloudy', '2026-01-04 08:23:02'),
-(2, 'Dhaka', '2026-01-05', 29.00, 72, 0.00, 'Sunny', '2026-01-04 08:23:02');
+INSERT INTO `weather_forecast` (`id`, `location`, `forecast_date`, `temperature`, `humidity`, `rainfall`, `description`, `created_by`, `created_at`) VALUES
+(1, 'Dhaka', '2026-01-05', 32.00, 75, 0.00, 'Partly cloudy', NULL, '2026-01-05 10:17:35'),
+(2, 'Dhaka', '2026-01-06', 33.00, 78, 5.00, 'Light rain expected', NULL, '2026-01-05 10:17:35'),
+(3, 'Dhaka', '2026-01-07', 31.00, 80, 15.00, 'Moderate rain', NULL, '2026-01-05 10:17:35'),
+(4, 'Dhaka', '2026-01-08', 30.00, 82, 20.00, 'Heavy rain', NULL, '2026-01-05 10:17:35'),
+(5, 'Dhaka', '2026-01-09', 31.00, 79, 10.00, 'Scattered showers', NULL, '2026-01-05 10:17:35'),
+(6, 'Dhaka', '2026-01-10', 32.00, 76, 2.00, 'Mostly sunny', NULL, '2026-01-05 10:17:35'),
+(7, 'Dhaka', '2026-01-11', 33.00, 74, 0.00, 'Clear sky', NULL, '2026-01-05 10:17:35');
 
 --
 -- Indexes for dumped tables
@@ -409,27 +473,12 @@ ALTER TABLE `answers`
   ADD KEY `expert_id` (`expert_id`);
 
 --
--- Indexes for table `calendar_tasks`
+-- Indexes for table `cart`
 --
-ALTER TABLE `calendar_tasks`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `farmer_id` (`farmer_id`);
-
---
--- Indexes for table `cart_items`
---
-ALTER TABLE `cart_items`
+ALTER TABLE `cart`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
-  ADD KEY `input_product_id` (`input_product_id`);
-
---
--- Indexes for table `chat_messages`
---
-ALTER TABLE `chat_messages`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `sender_id` (`sender_id`),
-  ADD KEY `receiver_id` (`receiver_id`);
+  ADD KEY `product_id` (`product_id`);
 
 --
 -- Indexes for table `faqs`
@@ -438,25 +487,19 @@ ALTER TABLE `faqs`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `input_orders`
---
-ALTER TABLE `input_orders`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `farmer_id` (`farmer_id`),
-  ADD KEY `input_product_id` (`input_product_id`);
-
---
--- Indexes for table `input_products`
---
-ALTER TABLE `input_products`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `supplier_id` (`supplier_id`);
-
---
 -- Indexes for table `market_prices`
 --
 ALTER TABLE `market_prices`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `created_by` (`created_by`);
+
+--
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sender_id` (`sender_id`),
+  ADD KEY `receiver_id` (`receiver_id`);
 
 --
 -- Indexes for table `notifications`
@@ -470,15 +513,30 @@ ALTER TABLE `notifications`
 --
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `buyer_id` (`buyer_id`);
+  ADD UNIQUE KEY `order_number` (`order_number`),
+  ADD KEY `farmer_id` (`farmer_id`);
 
 --
--- Indexes for table `products`
+-- Indexes for table `order_items`
 --
-ALTER TABLE `products`
+ALTER TABLE `order_items`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `farmer_id` (`farmer_id`);
+  ADD KEY `order_id` (`order_id`),
+  ADD KEY `product_id` (`product_id`);
+
+--
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `profiles`
+--
+ALTER TABLE `profiles`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indexes for table `questions`
@@ -488,10 +546,18 @@ ALTER TABLE `questions`
   ADD KEY `farmer_id` (`farmer_id`);
 
 --
--- Indexes for table `suppliers`
+-- Indexes for table `revenue`
 --
-ALTER TABLE `suppliers`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `revenue`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
+-- Indexes for table `shop_products`
+--
+ALTER TABLE `shop_products`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `created_by` (`created_by`);
 
 --
 -- Indexes for table `support_tickets`
@@ -499,6 +565,13 @@ ALTER TABLE `suppliers`
 ALTER TABLE `support_tickets`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `farmer_id` (`farmer_id`);
 
 --
 -- Indexes for table `tips`
@@ -516,17 +589,11 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- Indexes for table `user_profiles`
+-- Indexes for table `weather_forecast`
 --
-ALTER TABLE `user_profiles`
+ALTER TABLE `weather_forecast`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `user_id` (`user_id`);
-
---
--- Indexes for table `weather_data`
---
-ALTER TABLE `weather_data`
-  ADD PRIMARY KEY (`id`);
+  ADD KEY `created_by` (`created_by`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -539,106 +606,106 @@ ALTER TABLE `answers`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `calendar_tasks`
+-- AUTO_INCREMENT for table `cart`
 --
-ALTER TABLE `calendar_tasks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `cart_items`
---
-ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `chat_messages`
---
-ALTER TABLE `chat_messages`
+ALTER TABLE `cart`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `faqs`
 --
 ALTER TABLE `faqs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- AUTO_INCREMENT for table `input_orders`
---
-ALTER TABLE `input_orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `input_products`
---
-ALTER TABLE `input_products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `market_prices`
 --
 ALTER TABLE `market_prices`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `password_resets`
+--
+ALTER TABLE `password_resets`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `products`
+-- AUTO_INCREMENT for table `profiles`
 --
-ALTER TABLE `products`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `profiles`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `questions`
 --
 ALTER TABLE `questions`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `suppliers`
+-- AUTO_INCREMENT for table `revenue`
 --
-ALTER TABLE `suppliers`
+ALTER TABLE `revenue`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `shop_products`
+--
+ALTER TABLE `shop_products`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `support_tickets`
 --
 ALTER TABLE `support_tickets`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `tasks`
+--
+ALTER TABLE `tasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tips`
 --
 ALTER TABLE `tips`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT for table `user_profiles`
+-- AUTO_INCREMENT for table `weather_forecast`
 --
-ALTER TABLE `user_profiles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT for table `weather_data`
---
-ALTER TABLE `weather_data`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `weather_forecast`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Constraints for dumped tables
@@ -652,37 +719,24 @@ ALTER TABLE `answers`
   ADD CONSTRAINT `answers_ibfk_2` FOREIGN KEY (`expert_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `calendar_tasks`
+-- Constraints for table `cart`
 --
-ALTER TABLE `calendar_tasks`
-  ADD CONSTRAINT `calendar_tasks_ibfk_1` FOREIGN KEY (`farmer_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+ALTER TABLE `cart`
+  ADD CONSTRAINT `cart_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `cart_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `shop_products` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `cart_items`
+-- Constraints for table `market_prices`
 --
-ALTER TABLE `cart_items`
-  ADD CONSTRAINT `cart_items_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `cart_items_ibfk_2` FOREIGN KEY (`input_product_id`) REFERENCES `input_products` (`id`) ON DELETE CASCADE;
+ALTER TABLE `market_prices`
+  ADD CONSTRAINT `market_prices_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
--- Constraints for table `chat_messages`
+-- Constraints for table `messages`
 --
-ALTER TABLE `chat_messages`
-  ADD CONSTRAINT `chat_messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `chat_messages_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `input_orders`
---
-ALTER TABLE `input_orders`
-  ADD CONSTRAINT `input_orders_ibfk_1` FOREIGN KEY (`farmer_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `input_orders_ibfk_2` FOREIGN KEY (`input_product_id`) REFERENCES `input_products` (`id`) ON DELETE CASCADE;
-
---
--- Constraints for table `input_products`
---
-ALTER TABLE `input_products`
-  ADD CONSTRAINT `input_products_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`) ON DELETE CASCADE;
+ALTER TABLE `messages`
+  ADD CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`sender_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`receiver_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `notifications`
@@ -694,14 +748,26 @@ ALTER TABLE `notifications`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`buyer_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`farmer_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `products`
+-- Constraints for table `order_items`
 --
-ALTER TABLE `products`
-  ADD CONSTRAINT `products_ibfk_1` FOREIGN KEY (`farmer_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `shop_products` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD CONSTRAINT `password_resets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `profiles`
+--
+ALTER TABLE `profiles`
+  ADD CONSTRAINT `profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `questions`
@@ -710,10 +776,28 @@ ALTER TABLE `questions`
   ADD CONSTRAINT `questions_ibfk_1` FOREIGN KEY (`farmer_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `revenue`
+--
+ALTER TABLE `revenue`
+  ADD CONSTRAINT `revenue_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `shop_products`
+--
+ALTER TABLE `shop_products`
+  ADD CONSTRAINT `shop_products_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
+
+--
 -- Constraints for table `support_tickets`
 --
 ALTER TABLE `support_tickets`
   ADD CONSTRAINT `support_tickets_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`farmer_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `tips`
@@ -722,10 +806,10 @@ ALTER TABLE `tips`
   ADD CONSTRAINT `tips_ibfk_1` FOREIGN KEY (`expert_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 
 --
--- Constraints for table `user_profiles`
+-- Constraints for table `weather_forecast`
 --
-ALTER TABLE `user_profiles`
-  ADD CONSTRAINT `user_profiles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+ALTER TABLE `weather_forecast`
+  ADD CONSTRAINT `weather_forecast_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
