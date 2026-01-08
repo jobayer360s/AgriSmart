@@ -7,13 +7,13 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $newPassword = $_POST['new_password'];
     $confirmPassword = $_POST['confirm_password'];
     
-    // Check if passwords match
+
     if($newPassword != $confirmPassword) {
         header('location: ../views/edit_profile.php?error=mismatch');
         exit;
     }
     
-    // Verify current password
+
     $stmt = $GLOBALS['conn']->prepare("SELECT password FROM users WHERE id = ?");
     $stmt->execute([$_SESSION['user_id']]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,7 +23,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
         exit;
     }
     
-    // Update password
+
     $stmt = $GLOBALS['conn']->prepare("UPDATE users SET password = ? WHERE id = ?");
     
     if($stmt->execute([$newPassword, $_SESSION['user_id']])) {

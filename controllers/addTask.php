@@ -10,7 +10,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit'])) {
     $type = $_POST['task_type'];
     
     if(addTask($_SESSION['user_id'], $title, $description, $date, $type)) {
-        // Create notification for the task
+    
         createNotification($_SESSION['user_id'], 'task', 'New Task Added', 
             'Task "' . $title . '" scheduled for ' . date('M d, Y', strtotime($date)), 
             'calendar.php');
