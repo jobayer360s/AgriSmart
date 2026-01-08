@@ -1,66 +1,57 @@
-<?php
-// assets/layouts/footer.php - Shared Footer Component
-?>
-<footer class="footer">
-    <div class="footer-container">
-        <!-- Footer Content Grid -->
-        <div class="footer-grid">
-            <!-- Company Info -->
-            <div class="footer-section">
-                <h4>AgriSmart</h4>
-                <p>Smart Farming for Modern Bangladeshi Farmers</p>
-                <div class="social-links">
-                    <a href="#" title="Facebook">f</a>
-                    <a href="#" title="Twitter">𝕏</a>
-                    <a href="#" title="Instagram">📷</a>
-                    <a href="#" title="LinkedIn">in</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - AgriSmart' : 'AgriSmart'; ?></title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+        <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-main">
+                <div class="footer-left">
+                    <strong>🌾 AgriSmart</strong> - Empowering Farmers with Technology
+                    
+                </div>
+                <div class="footer-center">
+                    <a href="help.php">Help</a>
+                    <a href="profile.php">Profile</a>
+                    <a href="notifications.php">Notifications</a>
+                    <a href="weather.php">Weather</a>
+                    
+                </div>
+                <div class="footer-right">
+                    &copy; <?php echo date('Y'); ?> AgriSmart | All rights reserved
                 </div>
             </div>
-
-            <!-- Quick Navigation -->
-            <div class="footer-section">
-                <h4>Navigation</h4>
-                <ul class="footer-links">
-                    <li><a href="../../index.php">Home</a></li>
-                    <li><a href="about.php">About</a></li>
-                    <li><a href="tips.php">Tips</a></li>
-                    <li><a href="marketplace.php">Marketplace</a></li>
-                </ul>
-            </div>
-
-            <!-- Useful Links -->
-            <div class="footer-section">
-                <h4>Useful Links</h4>
-                <ul class="footer-links">
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="#">Career</a></li>
-                </ul>
-            </div>
-
-            <!-- Contact Info -->
-            <div class="footer-section">
-                <h4>Contact</h4>
-                <ul class="footer-links">
-                    <li>📧 info@agrismart.com</li>
-                    <li>📞 +880 1700 000000</li>
-                    <li>📍 Dhaka, Bangladesh</li>
-                    <li>⏰ 9:00 AM - 6:00 PM</li>
-                </ul>
-            </div>
         </div>
+    </footer>
+    
+    <?php if(isset($includeAdminJS) && $includeAdminJS): ?>
+        <script src="../assets/js/admin.js"></script>
+    <?php endif; ?>
+    <?php if(isset($includeChatJS) && $includeChatJS): ?>
+        <script src="../assets/js/chat.js"></script>
+    <?php endif; ?>
+    
+    <script>
+    window.onscroll = function() {
+        if(document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            if(!document.getElementById('backToTop')) {
+                const btn = document.createElement('button');
+                btn.id = 'backToTop';
+                btn.innerHTML = '⬆️';
+                btn.style.cssText = 'position:fixed;bottom:30px;right:30px;background:linear-gradient(135deg,#27ae60 0%,#229954 100%);color:white;border:none;border-radius:50%;width:50px;height:50px;font-size:1.5em;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.2);z-index:999;';
+                btn.onclick = function() { window.scrollTo({top: 0, behavior: 'smooth'}); };
+                document.body.appendChild(btn);
+            }
+        } else {
+            const btn = document.getElementById('backToTop');
+            if(btn) btn.remove();
+        }
+    };
+    </script>
+</body>
+</html>
 
-        <!-- Footer Bottom -->
-        <div class="footer-bottom">
-            <div class="footer-left">
-                <p>&copy; 2025 AgriSmart. All rights reserved.</p>
-            </div>
-            <div class="footer-right">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms & Conditions</a>
-                <a href="#">Cookie Policy</a>
-            </div>
-        </div>
-    </div>
-</footer>
