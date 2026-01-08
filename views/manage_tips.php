@@ -1,5 +1,5 @@
 <?php
-require_once('authCheck.php');
+require_once('../controllers/authCheck.php');
 
 if($_SESSION['role'] != 'admin' && $_SESSION['role'] != 'management'){
     header('location: login.php');

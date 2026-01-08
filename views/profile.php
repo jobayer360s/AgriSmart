@@ -1,5 +1,5 @@
 <?php
-require_once('authCheck.php');
+require_once('../controllers/authCheck.php');
 require_once(__DIR__ . '/../models/userModel.php');
 
 $user = getUserById($_SESSION['user_id']);

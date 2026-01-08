@@ -1,5 +1,5 @@
 <?php
-require_once('authCheck.php');
+require_once('../controllers/authCheck.php');
 require_once(__DIR__ . '/../models/messageModel.php');
 
 $conversations = getConversations($_SESSION['user_id']);

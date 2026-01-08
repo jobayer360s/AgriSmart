@@ -1,5 +1,5 @@
 <?php
-require_once('authCheck.php');
+require_once('../controllers/authCheck.php');
 
 $pageTitle = "Help & FAQs";
 include('../assets/includes/header.php');

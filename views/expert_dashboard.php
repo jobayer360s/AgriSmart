@@ -1,5 +1,5 @@
 <?php
-require_once('authCheck.php');
+require_once('../controllers/authCheck.php');
 
 if($_SESSION['role'] != 'expert'){
     header('location: login.php');
