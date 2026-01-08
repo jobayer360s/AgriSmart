@@ -1,5 +1,5 @@
 <?php
-require_once('authCheck.php');
+require_once('../controllers/authCheck.php');
 require_once(__DIR__ . '/../models/notificationModel.php');
 
 $notifications = getNotifications($_SESSION['user_id']);

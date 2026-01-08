@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// If user is logged in, redirect to their dashboard
 if(isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
     switch($_SESSION['role']) {
         case 'admin':
@@ -20,7 +19,7 @@ if(isset($_SESSION['user_id']) && isset($_SESSION['role'])) {
             header('location: views/login.php');
     }
 } else {
-    // If not logged in, redirect to login page
+  
     header('location: views/login.php');
 }
 exit;

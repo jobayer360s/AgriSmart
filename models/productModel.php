@@ -1,9 +1,7 @@
 <?php
 require_once(__DIR__ . '/db.php');
 
-// =====================================================
-// GET ALL PRODUCTS
-// =====================================================
+
 function getAllProducts() {
     $conn = getConnection();
     $sql = "SELECT * FROM shop_products ORDER BY created_at DESC";
@@ -20,9 +18,6 @@ function getAllProducts() {
     return $products;
 }
 
-// =====================================================
-// GET PRODUCT BY ID
-// =====================================================
 function getProductById($id) {
     $conn = getConnection();
     $sql = "SELECT * FROM shop_products WHERE id = ?";
@@ -40,9 +35,6 @@ function getProductById($id) {
     return $product;
 }
 
-// =====================================================
-// GET PRODUCTS BY CATEGORY
-// =====================================================
 function getProductsByCategory($category) {
     $conn = getConnection();
     $sql = "SELECT * FROM shop_products WHERE category = ? ORDER BY name ASC";
@@ -62,19 +54,22 @@ function getProductsByCategory($category) {
     return $products;
 }
 
-// =====================================================
-// SEARCH PRODUCTS
-// =====================================================
 function searchProducts($keyword) {
     $conn = getConnection();
     $keyword = "%$keyword%";
-    $sql = "SELECT * FROM shop_products WHERE name LIKE ? OR description LIKE ? ORDER BY name ASC";
-    $stmt = mysqli_prepare($conn, $sql);
-    mysqli_stmt_bind_param($stmt, "ss", $keyword, $keyword);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
+  
+    $sql = "SELECT * FROM shop_products 
+            WHERE name LIKE ? OR description LIKE ? OR category LIKE ?
+            ORDER BY name ASC
+            LIMIT 20";
     
+    $stmt = mysqli_prepare($conn, $sql);
+    mysqli_stmt_bind_param($stmt, "sss", $keyword, $keyword, $keyword);
+    mysqli_stmt_execute($stmt);
+    
+    $result = mysqli_stmt_get_result($stmt);
     $products = [];
+    
     if($result && mysqli_num_rows($result) > 0) {
         while($row = mysqli_fetch_assoc($result)) {
             $products[] = $row;
@@ -85,9 +80,7 @@ function searchProducts($keyword) {
     return $products;
 }
 
-// =====================================================
-// ADD NEW PRODUCT
-// =====================================================
+
 function addProduct($name, $description, $category, $price, $stock, $image = null) {
     $conn = getConnection();
     $sql = "INSERT INTO shop_products (name, description, category, price, stock, image) 
@@ -100,9 +93,6 @@ function addProduct($name, $description, $category, $price, $stock, $image = nul
     return $result;
 }
 
-// =====================================================
-// UPDATE PRODUCT
-// =====================================================
 function updateProduct($id, $name, $description, $category, $price, $stock, $image = null) {
     $conn = getConnection();
     
@@ -123,9 +113,6 @@ function updateProduct($id, $name, $description, $category, $price, $stock, $ima
     return $result;
 }
 
-// =====================================================
-// DELETE PRODUCT
-// =====================================================
 function deleteProduct($id) {
     $conn = getConnection();
     $sql = "DELETE FROM shop_products WHERE id = ?";
@@ -137,9 +124,6 @@ function deleteProduct($id) {
     return $result;
 }
 
-// =====================================================
-// GET TOTAL PRODUCTS COUNT
-// =====================================================
 function getTotalProducts() {
     $conn = getConnection();
     $sql = "SELECT COUNT(*) as total FROM shop_products";
@@ -155,9 +139,6 @@ function getTotalProducts() {
     return $count;
 }
 
-// =====================================================
-// GET LOW STOCK PRODUCTS
-// =====================================================
 function getLowStockProducts($threshold = 10) {
     $conn = getConnection();
     $sql = "SELECT * FROM shop_products WHERE stock <= ? ORDER BY stock ASC";
@@ -177,9 +158,6 @@ function getLowStockProducts($threshold = 10) {
     return $products;
 }
 
-// =====================================================
-// UPDATE PRODUCT STOCK
-// =====================================================
 function updateProductStock($id, $quantity) {
     $conn = getConnection();
     $sql = "UPDATE shop_products SET stock = stock - ? WHERE id = ?";
@@ -191,9 +169,6 @@ function updateProductStock($id, $quantity) {
     return $result;
 }
 
-// =====================================================
-// CHECK PRODUCT STOCK AVAILABILITY
-// =====================================================
 function checkProductStock($id, $quantity) {
     $conn = getConnection();
     $sql = "SELECT stock FROM shop_products WHERE id = ?";
@@ -212,9 +187,6 @@ function checkProductStock($id, $quantity) {
     return $available;
 }
 
-// =====================================================
-// GET PRODUCTS BY IDS (for cart)
-// =====================================================
 function getProductsByIds($ids) {
     if(empty($ids)) return [];
     
@@ -239,9 +211,6 @@ function getProductsByIds($ids) {
     return $products;
 }
 
-// =====================================================
-// GET FEATURED/POPULAR PRODUCTS
-// =====================================================
 function getFeaturedProducts($limit = 6) {
     $conn = getConnection();
     $sql = "SELECT * FROM shop_products WHERE stock > 0 ORDER BY created_at DESC LIMIT ?";
@@ -261,9 +230,7 @@ function getFeaturedProducts($limit = 6) {
     return $products;
 }
 
-// =====================================================
-// GET PRODUCTS COUNT BY CATEGORY
-// =====================================================
+
 function getProductCountByCategory() {
     $conn = getConnection();
     $sql = "SELECT category, COUNT(*) as count FROM shop_products GROUP BY category";

@@ -1,200 +1,180 @@
-/**
- * Marketplace JavaScript
- */
+// Marketplace JavaScript Functions
 
-// Load products on page load
-document.addEventListener('DOMContentLoaded', function() {
-    loadProducts();
-    setupEventListeners();
-});
-
-// Setup event listeners
-function setupEventListeners() {
-    const searchInput = document.getElementById('searchInput');
-    const categoryFilter = document.getElementById('categoryFilter');
-
-    if (searchInput) {
-        searchInput.addEventListener('keyup', filterProducts);
-    }
-
-    if (categoryFilter) {
-        categoryFilter.addEventListener('change', filterProducts);
-    }
+// Add to Cart (AJAX)
+function addToCart(productId, quantity = 1) {
+    let xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "../api/addToCart.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("productid=" + productId + "&quantity=" + quantity);
+    
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            try {
+                let response = JSON.parse(this.responseText);
+                if (response.success) {
+                    showNotification(response.message, 'success');
+                    updateCartCount(response.cart_count);
+                } else {
+                    showNotification(response.message, 'error');
+                }
+            } catch (e) {
+                showNotification('Error adding to cart', 'error');
+            }
+        }
+    };
 }
 
-// Load all products
-function loadProducts() {
-    const searchTerm = document.getElementById('searchInput')?.value || '';
-    const category = document.getElementById('categoryFilter')?.value || '';
-
-    // Demo products (in production, fetch from API)
-    const allProducts = [
-        {id: 1, name: 'Paddy Seeds', price: 500, category: 'seeds', stock: 50},
-        {id: 2, name: 'Urea Fertilizer', price: 300, category: 'fertilizer', stock: 100},
-        {id: 3, name: 'DAP Fertilizer', price: 450, category: 'fertilizer', stock: 75},
-        {id: 4, name: 'Pesticide Spray', price: 200, category: 'pesticide', stock: 40},
-        {id: 5, name: 'Wheat Seeds', price: 600, category: 'seeds', stock: 30},
-        {id: 6, name: 'Potash Fertilizer', price: 350, category: 'fertilizer', stock: 60}
-    ];
-
-    let filtered = allProducts;
-
-    if (searchTerm) {
-        filtered = filtered.filter(p => 
-            p.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-    }
-
-    if (category) {
-        filtered = filtered.filter(p => p.category === category);
-    }
-
-    displayProducts(filtered);
+// Update Cart Quantity (AJAX)
+function updateCartQuantity(cartId, quantity) {
+    let xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "../api/updateCartQuantity.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("cartid=" + cartId + "&quantity=" + quantity);
+    
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            try {
+                let response = JSON.parse(this.responseText);
+                if (response.success) {
+                    showNotification(response.message, 'success');
+                    updateCartTotal(response.cart_total);
+                    location.reload(); // Reload to show updated prices
+                } else {
+                    showNotification(response.message, 'error');
+                }
+            } catch (e) {
+                showNotification('Error updating quantity', 'error');
+            }
+        }
+    };
 }
 
-// Filter products
-function filterProducts() {
-    loadProducts();
-}
-
-// Display products
-function displayProducts(products) {
-    const grid = document.getElementById('productsGrid');
-    const emptyState = document.getElementById('emptyState');
-
-    grid.innerHTML = '';
-
-    if (products.length === 0) {
-        grid.classList.add('hidden');
-        emptyState.classList.remove('hidden');
+// Remove from Cart (AJAX)
+function removeFromCart(cartId) {
+    if (!confirm('Remove this item from cart?')) {
         return;
     }
-
-    grid.classList.remove('hidden');
-    emptyState.classList.add('hidden');
-
-    products.forEach(product => {
-        const card = document.createElement('div');
-        card.className = 'product-card';
-        card.innerHTML = `
-            <div class="product-image">🌾</div>
-            <div class="product-body">
-                <div class="product-name">${product.name}</div>
-                <div class="product-price">${formatCurrency(product.price)}</div>
-                <div class="product-category">${product.category}</div>
-                <div class="product-stock">Stock: ${product.stock}</div>
-                <div class="product-actions">
-                    <input type="number" value="1" min="1" max="${product.stock}" class="qty-input">
-                    <button class="btn btn-primary" onclick="addToCart(${product.id}, '${product.name}', ${product.price})">Add</button>
-                </div>
-            </div>
-        `;
-        grid.appendChild(card);
-    });
-}
-
-// Add to cart
-function addToCart(productId, productName, price) {
-    const qty = document.querySelector(`input[value="1"]`)?.value || 1;
-    const cartSection = document.getElementById('cartSection');
-
-    if (cartSection) {
-        cartSection.classList.remove('hidden');
-        addCartItem(productId, productName, price, parseInt(qty));
-        showNotification(`${productName} added to cart!`, 'success');
-    }
-}
-
-// Add item to cart
-function addCartItem(productId, productName, price, quantity) {
-    const cartBody = document.getElementById('cartBody');
     
-    // Check if item already in cart
-    const existingRow = cartBody.querySelector(`[data-id="${productId}"]`);
+    let xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "../api/removeFromCart.php", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("cartid=" + cartId);
     
-    if (existingRow) {
-        const qtyInput = existingRow.querySelector('.qty-input');
-        qtyInput.value = parseInt(qtyInput.value) + quantity;
-        updateCartItem(existingRow);
-    } else {
-        const row = document.createElement('tr');
-        row.setAttribute('data-id', productId);
-        row.innerHTML = `
-            <td>${productName}</td>
-            <td>${formatCurrency(price)}</td>
-            <td><input type="number" class="qty-input" value="${quantity}" min="1" onchange="updateCart()"></td>
-            <td class="item-total">${formatCurrency(price * quantity)}</td>
-            <td><button class="btn btn-danger" onclick="removeFromCart(${productId})">Remove</button></td>
-        `;
-        cartBody.appendChild(row);
-    }
-
-    updateCartTotal();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            try {
+                let response = JSON.parse(this.responseText);
+                if (response.success) {
+                    showNotification(response.message, 'success');
+                    updateCartCount(response.cart_count);
+                    location.reload();
+                } else {
+                    showNotification(response.message, 'error');
+                }
+            } catch (e) {
+                showNotification('Error removing item', 'error');
+            }
+        }
+    };
 }
 
-// Update cart item
-function updateCartItem(row) {
-    const price = parseFloat(row.cells[1].textContent.replace('৳', ''));
-    const qty = parseInt(row.querySelector('.qty-input').value);
-    row.querySelector('.item-total').textContent = formatCurrency(price * qty);
-    updateCartTotal();
-}
-
-// Remove from cart
-function removeFromCart(productId) {
-    const cartBody = document.getElementById('cartBody');
-    const row = cartBody.querySelector(`[data-id="${productId}"]`);
-    
-    if (row) {
-        row.remove();
-        showNotification('Item removed from cart', 'success');
-        
-        if (cartBody.children.length === 0) {
-            document.getElementById('cartSection').classList.add('hidden');
+// Update Cart Count Badge
+function updateCartCount(count) {
+    let badge = document.getElementById('cart-count');
+    if (badge) {
+        badge.textContent = count;
+        if (count > 0) {
+            badge.style.display = 'inline-block';
         } else {
-            updateCartTotal();
+            badge.style.display = 'none';
         }
     }
 }
 
-// Update cart total
-function updateCartTotal() {
-    const cartBody = document.getElementById('cartBody');
-    let total = 0;
+// Update Cart Total
+function updateCartTotal(total) {
+    let totalElement = document.getElementById('cart-total');
+    if (totalElement) {
+        totalElement.textContent = '৳' + parseFloat(total).toFixed(2);
+    }
+}
 
-    cartBody.querySelectorAll('tr').forEach(row => {
-        const price = parseFloat(row.cells[1].textContent.replace('৳', ''));
-        const qty = parseInt(row.querySelector('.qty-input').value);
-        total += price * qty;
+// Show Notification
+function showNotification(message, type = 'info') {
+    let notification = document.createElement('div');
+    notification.className = 'notification notification-' + type;
+    notification.textContent = message;
+    notification.style.cssText = 'position:fixed;top:20px;right:20px;padding:15px 25px;background:#28a745;color:white;border-radius:8px;box-shadow:0 4px 15px rgba(0,0,0,0.2);z-index:9999;animation:slideIn 0.3s;';
+    
+    if (type === 'error') {
+        notification.style.background = '#dc3545';
+    }
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(function() {
+        notification.remove();
+    }, 3000);
+}
+
+// Filter Products by Category
+function filterProducts(category) {
+    let products = document.querySelectorAll('.product-card');
+    
+    products.forEach(function(product) {
+        if (category === 'all' || product.dataset.category === category) {
+            product.style.display = 'block';
+        } else {
+            product.style.display = 'none';
+        }
     });
-
-    document.getElementById('cartTotal').textContent = total.toFixed(2);
+    
+    // Update active filter button
+    document.querySelectorAll('.filter-btn').forEach(function(btn) {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
 }
 
-// Clear cart
-function clearCart() {
-    if (confirm('Are you sure you want to clear the cart?')) {
-        document.getElementById('cartBody').innerHTML = '';
-        document.getElementById('cartSection').classList.add('hidden');
-        showNotification('Cart cleared', 'success');
+// Search Products in Shop
+function searchShopProducts() {
+    let query = document.getElementById('shopSearch').value.toLowerCase();
+    let products = document.querySelectorAll('.product-card');
+    
+    products.forEach(function(product) {
+        let name = product.dataset.name.toLowerCase();
+        let description = product.dataset.description.toLowerCase();
+        
+        if (name.includes(query) || description.includes(query)) {
+            product.style.display = 'block';
+        } else {
+            product.style.display = 'none';
+        }
+    });
+}
+
+// Quantity Controls
+function incrementQuantity(inputId) {
+    let input = document.getElementById(inputId);
+    input.value = parseInt(input.value) + 1;
+}
+
+function decrementQuantity(inputId) {
+    let input = document.getElementById(inputId);
+    if (parseInt(input.value) > 1) {
+        input.value = parseInt(input.value) - 1;
     }
 }
 
-// Proceed to checkout
-function proceedToCheckout() {
-    const cartBody = document.getElementById('cartBody');
-    
-    if (cartBody.children.length === 0) {
-        showNotification('Cart is empty', 'error');
-        return;
-    }
-
-    // In production, submit order to API
-    showNotification('Order placed successfully! Thank you for your purchase.', 'success');
-    
-    // Clear cart
-    setTimeout(() => {
-        clearCart();
-        location.reload();
-    }, 2000);
-}
+// Initialize marketplace features
+document.addEventListener('DOMContentLoaded', function() {
+    // Add CSS animation for notifications
+    let style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+});

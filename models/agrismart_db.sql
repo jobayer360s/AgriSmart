@@ -1,31 +1,10 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Host: 127.0.0.1
--- Generation Time: Jan 05, 2026 at 11:36 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
 
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Database: `agrismart_db`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `answers`
---
 
 CREATE TABLE `answers` (
   `id` int(11) NOT NULL,
@@ -37,9 +16,7 @@ CREATE TABLE `answers` (
 
 -- --------------------------------------------------------
 
---
 -- Table structure for table `cart`
---
 
 CREATE TABLE `cart` (
   `id` int(11) NOT NULL,
@@ -812,6 +789,4 @@ ALTER TABLE `weather_forecast`
   ADD CONSTRAINT `weather_forecast_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 COMMIT;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

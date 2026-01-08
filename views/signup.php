@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// If already logged in, redirect to dashboard
 if(isset($_SESSION['user_id'])) {
     switch($_SESSION['role']) {
         case 'admin':

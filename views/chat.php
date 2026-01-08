@@ -1,5 +1,5 @@
 <?php
-require_once('authCheck.php');
+require_once('../controllers/authCheck.php');
 require_once(__DIR__ . '/../models/messageModel.php');
 require_once(__DIR__ . '/../models/userModel.php');
 
@@ -63,11 +63,10 @@ include('../assets/includes/header.php');
 
 <script src="../assets/js/chat.js"></script>
 <script>
-    // Scroll to bottom
+    
     var msgBox = document.getElementById('messagesBox');
     msgBox.scrollTop = msgBox.scrollHeight;
     
-    // Set receiver ID for controller
     var receiverId = <?php echo $contactId; ?>;
 </script>
 

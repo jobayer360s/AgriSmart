@@ -1,7 +1,14 @@
 <?php
 session_start();
 
-// If already logged in, redirect to dashboard
+
+$rememberUsername = '';
+if (isset($_COOKIE['agrismart_remember'])) {
+    list($cookieUsername) = explode('|', $_COOKIE['agrismart_remember'], 2);
+    $rememberUsername = htmlspecialchars($cookieUsername);
+}
+
+
 if(isset($_SESSION['user_id'])) {
     switch($_SESSION['role']) {
         case 'admin':
@@ -55,13 +62,18 @@ if(isset($_SESSION['user_id'])) {
             <form method="post" action="../controllers/loginCheck.php" class="form-style">
                 <div class="form-group">
                     <label>Username *</label>
-                    <input type="text" name="username" placeholder="Enter your username" required autofocus>
+                    <input type="text" name="username" placeholder="Enter your username" 
+                           value="<?php echo $rememberUsername; ?>" required autofocus>
                 </div>
                 
                 <div class="form-group">
                     <label>Password *</label>
                     <input type="password" name="password" placeholder="Enter your password" required>
                 </div>
+                
+                 <label>
+                        <input type="checkbox" name="remember_me" value="1"> Remember me
+                    </label>
                 
                 <button type="submit" name="submit" class="btn">Login</button>
             </form>

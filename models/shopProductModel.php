@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/db.php');
+require_once __DIR__ . '/db.php';
 
 function getAllShopProducts() {
     global $conn;
@@ -14,16 +14,21 @@ function getShopProductById($id) {
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-function addShopProduct($name, $description, $category, $price, $stock, $supplier, $createdBy) {
+function addShopProduct($name, $description, $price, $stock, $category, $image = null) {
     global $conn;
-    $stmt = $conn->prepare("INSERT INTO shop_products (name, description, category, price, stock, supplier_name, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    return $stmt->execute([$name, $description, $category, $price, $stock, $supplier, $createdBy]);
+    $stmt = $conn->prepare("INSERT INTO shop_products (name, description, price, stock, category, image, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())");
+    return $stmt->execute([$name, $description, $price, $stock, $category, $image]);
 }
 
-function updateShopProduct($id, $name, $description, $category, $price, $stock, $supplier) {
+function updateShopProduct($id, $name, $description, $price, $stock, $category, $image = null) {
     global $conn;
-    $stmt = $conn->prepare("UPDATE shop_products SET name = ?, description = ?, category = ?, price = ?, stock = ?, supplier_name = ? WHERE id = ?");
-    return $stmt->execute([$name, $description, $category, $price, $stock, $supplier, $id]);
+    if ($image) {
+        $stmt = $conn->prepare("UPDATE shop_products SET name = ?, description = ?, price = ?, stock = ?, category = ?, image = ? WHERE id = ?");
+        return $stmt->execute([$name, $description, $price, $stock, $category, $image, $id]);
+    } else {
+        $stmt = $conn->prepare("UPDATE shop_products SET name = ?, description = ?, price = ?, stock = ?, category = ? WHERE id = ?");
+        return $stmt->execute([$name, $description, $price, $stock, $category, $id]);
+    }
 }
 
 function deleteShopProduct($id) {
@@ -32,9 +37,17 @@ function deleteShopProduct($id) {
     return $stmt->execute([$id]);
 }
 
-function updateStock($productId, $quantity) {
+// NEW: Search function
+function searchShopProducts($query) {
     global $conn;
-    $stmt = $conn->prepare("UPDATE shop_products SET stock = stock - ? WHERE id = ?");
-    return $stmt->execute([$quantity, $productId]);
+    $searchTerm = "%$query%";
+    $stmt = $conn->prepare("
+        SELECT * FROM shop_products 
+        WHERE name LIKE ? OR description LIKE ? OR category LIKE ? 
+        ORDER BY name ASC 
+        LIMIT 20
+    ");
+    $stmt->execute([$searchTerm, $searchTerm, $searchTerm]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 ?>
