@@ -27,14 +27,11 @@ function createTicket($userId, $subject, $message, $category, $priority) {
     return $stmt->execute([$userId, $subject, $message, $category, $priority]);
 }
 
-function updateTicketStatus($id, $status, $adminResponse = null) {
+// Add this function if missing
+function updateTicketStatus($ticketId, $status) {
     global $conn;
-    if($adminResponse) {
-        $stmt = $conn->prepare("UPDATE support_tickets SET status = ?, admin_response = ? WHERE id = ?");
-        return $stmt->execute([$status, $adminResponse, $id]);
-    } else {
-        $stmt = $conn->prepare("UPDATE support_tickets SET status = ? WHERE id = ?");
-        return $stmt->execute([$status, $id]);
-    }
+    $stmt = $conn->prepare("UPDATE support_tickets SET status = ? WHERE id = ?");
+    return $stmt->execute([$status, $ticketId]);
 }
+
 ?>

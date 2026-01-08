@@ -54,26 +54,4 @@ function deleteTip($id) {
     $stmt = $conn->prepare("DELETE FROM tips WHERE id = ?");
     return $stmt->execute([$id]);
 }
-
-
-function searchTips($query) {
-    global $conn;
-    $searchTerm = "%$query%";
-    
-    $stmt = $conn->prepare("
-        SELECT t.*, u.username as expert_name
-        FROM tips t
-        JOIN users u ON t.expert_id = u.id
-        WHERE t.title LIKE ? OR t.content LIKE ? OR t.category LIKE ?
-        ORDER BY t.title ASC
-        LIMIT 20
-    ");
-    
-    $stmt->bind_param("sss", $searchTerm, $searchTerm, $searchTerm);
-    $stmt->execute();
-    
-    return $stmt->get_result()->fetchAll(PDO::FETCH_ASSOC);
-}
-
-
 ?>

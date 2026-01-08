@@ -13,17 +13,17 @@ function getCartItems($userId) {
 
 function addToCart($userId, $productId, $quantity = 1) {
     global $conn;
-    // Check if already in cart
+    
     $stmt = $conn->prepare("SELECT * FROM cart WHERE user_id = ? AND product_id = ?");
     $stmt->execute([$userId, $productId]);
     $existing = $stmt->fetch(PDO::FETCH_ASSOC);
     
     if($existing) {
-        // Update quantity
+       
         $stmt = $conn->prepare("UPDATE cart SET quantity = quantity + ? WHERE user_id = ? AND product_id = ?");
         return $stmt->execute([$quantity, $userId, $productId]);
     } else {
-        // Add new
+        
         $stmt = $conn->prepare("INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?)");
         return $stmt->execute([$userId, $productId, $quantity]);
     }
@@ -57,4 +57,13 @@ function getCartTotal($userId) {
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result['total'] ?? 0;
 }
+
+function getCartCount($userId) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT SUM(quantity) as count FROM cart WHERE farmer_id = ?");
+    $stmt->execute([$userId]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['count'] ?? 0;
+}
+
 ?>

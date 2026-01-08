@@ -1,10 +1,3 @@
-/* ============================================
-   AGRISMART - COMPLETE STYLESHEET
-   Modern Agricultural Green Theme
-   WITH STICKY FOOTER FIX + PROPER TOP SPACING
-   ============================================ */
-
-/* === RESET & BASE === */
 * {
     margin: 0;
     padding: 0;
@@ -25,7 +18,7 @@ body {
     flex-direction: column;
 }
 
-/* === NAVIGATION === */
+
 .top-nav {
     background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
     padding: 0;
@@ -166,7 +159,7 @@ body {
     50% { transform: scale(1.1); }
 }
 
-/* === MAIN CONTAINER (FIXED WITH PROPER TOP SPACING) === */
+
 .main-container {
     max-width: 1400px;
     margin: 0 auto;
@@ -175,7 +168,7 @@ body {
     width: 100%;
 }
 
-/* === CONTENT BOX === */
+
 .content-box {
     background: white;
     padding: 30px;
@@ -200,7 +193,7 @@ body {
     font-size: 1.8em;
 }
 
-/* === STATS GRID === */
+
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -247,7 +240,7 @@ body {
     font-size: 1em;
 }
 
-/* === ACTION GRID === */
+
 .action-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -273,7 +266,7 @@ body {
     box-shadow: 0 6px 20px rgba(0,0,0,0.2);
 }
 
-/* === BUTTONS === */
+
 .btn {
     background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
     color: white;
@@ -324,7 +317,7 @@ body {
     width: 100%;
 }
 
-/* === FORMS === */
+
 .form-style {
     margin-top: 20px;
 }
@@ -374,7 +367,6 @@ body {
     flex-wrap: wrap;
 }
 
-/* === TABLES === */
 .table-responsive {
     overflow-x: auto;
     margin-top: 20px;
@@ -422,7 +414,7 @@ body {
     font-weight: 600;
 }
 
-/* === BADGES & STATUS === */
+
 .badge {
     padding: 6px 14px;
     border-radius: 20px;
@@ -536,7 +528,7 @@ body {
     color: #856404;
 }
 
-/* === SEARCH BOX === */
+
 .search-box {
     margin-bottom: 20px;
 }
@@ -556,7 +548,7 @@ body {
     box-shadow: 0 0 0 4px rgba(39, 174, 96, 0.1);
 }
 
-/* === PRODUCTS GRID === */
+
 .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));

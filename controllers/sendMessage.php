@@ -13,7 +13,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     if(sendMessage($_SESSION['user_id'], $receiverId, $message)) {
-        // Notify receiver
+       
         createNotification($receiverId, 'message', 'New Message', 
             'You have a new message from ' . $_SESSION['username'], 
             'chat.php?user=' . $_SESSION['user_id']);

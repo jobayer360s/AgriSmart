@@ -63,11 +63,10 @@ include('../assets/includes/header.php');
 
 <script src="../assets/js/chat.js"></script>
 <script>
-    // Scroll to bottom
+    
     var msgBox = document.getElementById('messagesBox');
     msgBox.scrollTop = msgBox.scrollHeight;
     
-    // Set receiver ID for controller
     var receiverId = <?php echo $contactId; ?>;
 </script>
 
