@@ -44,6 +44,7 @@ function createOrder($orderNumber, $farmerId, $totalAmount, $address) {
 }
 
 
+
 function addOrderItem($orderId, $productId, $productName, $quantity, $price) {
     global $conn;
     $stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, product_name, quantity, price) VALUES (?, ?, ?, ?, ?)");
