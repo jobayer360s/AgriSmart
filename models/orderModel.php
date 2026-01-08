@@ -1,7 +1,6 @@
 <?php
 require_once(__DIR__ . '/db.php');
 
-
 function getAllOrders() {
     global $conn;
     $stmt = $conn->query("SELECT o.*, u.username as farmer_name FROM orders o JOIN users u ON o.farmer_id = u.id ORDER BY o.created_at DESC");
@@ -22,7 +21,6 @@ function getOrdersByFarmer($farmerId) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-
 function getOrderItems($orderId) {
     global $conn;
     $stmt = $conn->prepare("SELECT * FROM order_items WHERE order_id = ?");
@@ -42,8 +40,6 @@ function createOrder($orderNumber, $farmerId, $totalAmount, $address) {
     $stmt->execute([$orderNumber, $farmerId, $totalAmount, $address]);
     return $conn->lastInsertId();
 }
-
-
 
 function addOrderItem($orderId, $productId, $productName, $quantity, $price) {
     global $conn;

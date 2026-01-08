@@ -422,7 +422,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `email`, `password`, `role`, `status`, `verified`, `created_at`) VALUES
-(1, 'admin', 'admin@agrismart.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'active', 1, '2026-01-05 10:17:35'),
+(1, 'admin', 'admin@agrismart.com', '123456', 'admin', 'active', 1, '2026-01-05 10:17:35'),
 (2, 'manager1', 'manager1@agrismart.com', '123456', 'management', 'active', 1, '2026-01-05 10:17:35'),
 (3, 'expert1', 'expert1@agrismart.com', '123456', 'expert', 'active', 1, '2026-01-05 10:17:35'),
 (4, 'expert2', 'expert2@agrismart.com', '123456', 'expert', 'active', 1, '2026-01-05 10:17:35'),
