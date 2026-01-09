@@ -65,7 +65,7 @@ The main objective of this project is to demonstrate:
 4. Open your browser and go to:
 
    ```
-   http://localhost/<project-folder-name>/
+   http://localhost/AgriSmart/
    ```
 
 ---
