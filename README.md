@@ -75,8 +75,8 @@ The main objective of this project is to demonstrate:
 * **Course Name:** Web Technologies
 * **Instructor:** Md. Al Amin
 * Assistant Professor , Department of CSE
-* **American International University - Bangladesh (AIUB)
-*  **GitHub: [MD AL-amin](https://github.com/alamin200290)
+* American International University - Bangladesh (AIUB)
+* GitHub: [MD AL-amin](https://github.com/alamin200290)
 
 
 ---
