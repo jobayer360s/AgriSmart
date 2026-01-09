@@ -20,6 +20,9 @@ if(!$tip || $tip['expert_id'] != $_SESSION['user_id']){
     exit;
 }
 
+setcookie('last_edited_tip', $_GET['id'], time() + (86400 * 7), "/");
+setcookie('last_tip_edit_access', date('Y-m-d H:i:s'), time() + (86400 * 7), "/");
+setcookie('editing_tip_category', $tip['category'], time() + (86400 * 1), "/");
 $pageTitle = "Edit Tip";
 include('../assets/includes/header.php');
 ?>
